@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PM Kisan Status PDF – All Work Online</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --green-dark:#1B5E20;--green:#2E7D32;--green-mid:#388E3C;
+  --yellow:#F9A825;--white:#fff;--navy:#0A1628;
+  --text:#1a1a1a;--muted:#5a6a6a;--radius:16px;
+  --shadow:0 8px 32px rgba(0,0,0,0.12);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:"Poppins","Noto Sans Devanagari",sans-serif;background:#f0f7f0;color:var(--text);overflow-x:hidden;}
+
+/* NAV */
+nav{background:var(--green-dark);position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,0.3);}
+.nav-inner{max-width:1100px;margin:auto;display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:60px;}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo-icon{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--yellow),#FFD54F);display:flex;align-items:center;justify-content:center;font-size:20px;}
+.nav-logo-text{color:#fff;font-size:1rem;font-weight:700;line-height:1.2;}
+.nav-logo-text span{display:block;font-size:0.68rem;font-weight:400;color:rgba(255,255,255,0.65);}
+
+/* TICKER */
+.ticker{background:var(--yellow);padding:8px 0;overflow:hidden;position:relative;height:34px;}
+.ticker-label{position:absolute;left:0;top:0;bottom:0;background:var(--green-dark);color:#fff;display:flex;align-items:center;padding:0 14px;font-weight:700;font-size:12px;z-index:2;}
+.ticker-wrap{overflow:hidden;position:absolute;left:80px;right:0;top:0;bottom:0;display:flex;align-items:center;}
+.ticker-track{display:flex;gap:60px;animation:scroll-left 30s linear infinite;white-space:nowrap;}
+.ticker-track span{color:var(--green-dark);font-size:13px;font-weight:600;}
+@keyframes scroll-left{0%{transform:translateX(100vw)}100%{transform:translateX(-100%)}}
+
+/* HERO */
+.hero{background:linear-gradient(160deg,#1B5E20 0%,#2E7D32 40%,#1a4a1a 100%);padding:50px 20px 60px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M40 0L80 40L40 80L0 40z'/%3E%3C/g%3E%3C/svg%3E");}
+.hero-icon{font-size:3rem;margin-bottom:14px;display:block;animation:float 3s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.hero h1{font-size:clamp(1.8rem,5vw,2.8rem);font-weight:800;color:#fff;line-height:1.2;margin-bottom:10px;text-shadow:0 2px 8px rgba(0,0,0,0.3);}
+.hero h1 span{color:var(--yellow);}
+.hero p{color:rgba(255,255,255,0.8);font-size:0.95rem;max-width:540px;margin:0 auto 24px;line-height:1.7;}
+.hero-pills{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;}
+.pill{background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.25);color:#fff;font-size:0.8rem;font-weight:600;padding:6px 14px;border-radius:99px;}
+
+/* NOTICE */
+.notice{background:#FFF8E1;border-left:4px solid var(--yellow);border-radius:0 12px 12px 0;padding:14px 20px;margin:28px auto;max-width:640px;font-size:0.85rem;color:#5D4037;line-height:1.7;}
+.notice strong{color:#E65100;}
+
+/* FORM SECTION */
+.form-section{padding:50px 0;background:linear-gradient(135deg,#f0f7f0,#e8f5e8);}
+.section-wrap{max-width:1100px;margin:auto;padding:0 20px;}
+.section-title{text-align:center;margin-bottom:32px;}
+.section-title h2{font-size:clamp(1.3rem,3.5vw,1.8rem);font-weight:800;color:var(--text);}
+.section-title h2 span{color:var(--green);}
+.title-line{width:60px;height:4px;background:linear-gradient(90deg,var(--green),var(--yellow));border-radius:99px;margin:10px auto 0;}
+
+.form-wrapper{max-width:600px;margin:0 auto;background:#fff;border-radius:20px;box-shadow:0 16px 50px rgba(0,0,0,0.12);overflow:hidden;}
+.form-header{background:linear-gradient(135deg,var(--green-dark),var(--green-mid));padding:22px 28px;text-align:center;}
+.form-header h2{color:#fff;font-size:1.15rem;font-weight:800;margin-bottom:4px;}
+.form-header p{color:rgba(255,255,255,0.75);font-size:0.8rem;}
+.form-notice-bar{background:#FFF8E1;border-left:4px solid var(--yellow);padding:12px 20px;font-size:0.82rem;color:#5D4037;line-height:1.6;}
+.form-notice-bar strong{color:#E65100;}
+.form-body{padding:26px;}
+
+.form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+.form-group label{font-size:0.85rem;font-weight:700;color:var(--green-dark);}
+.form-group label .req{color:#e53935;}
+.form-group input{padding:11px 14px;border:2px solid #C8E6C9;border-radius:10px;font-size:0.9rem;font-family:"Poppins",sans-serif;outline:none;transition:border-color .2s;background:#FAFFFE;}
+.form-group input:focus{border-color:var(--green);}
+
+/* QR BOX */
+.qr-box{background:linear-gradient(135deg,#E8F5E9,#F1F8F1);border:2px solid #A5D6A7;border-radius:14px;padding:20px;text-align:center;margin-bottom:18px;}
+.qr-box .qr-title{font-size:0.88rem;font-weight:700;color:var(--green-dark);margin-bottom:4px;}
+.qr-box .qr-sub{font-size:0.75rem;color:var(--muted);margin-bottom:14px;}
+.qr-box img{width:180px;height:180px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,0.15);border:3px solid #fff;}
+.qr-box .qr-note{margin-top:12px;font-size:0.78rem;color:var(--muted);line-height:1.6;}
+
+.submit-btn{width:100%;padding:15px;background:linear-gradient(135deg,var(--green-dark),var(--green-mid));color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:800;cursor:pointer;font-family:"Poppins",sans-serif;transition:all .2s;margin-top:6px;box-shadow:0 6px 20px rgba(27,94,32,0.35);}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(27,94,32,0.4);}
+.submit-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+
+.success-msg{display:none;background:#E8F5E9;border:2px solid #A5D6A7;border-radius:12px;padding:24px;text-align:center;margin-top:16px;}
+.success-msg .tick{font-size:3rem;margin-bottom:10px;}
+.success-msg h3{color:var(--green-dark);font-size:1.1rem;font-weight:800;margin-bottom:6px;}
+.success-msg p{color:var(--muted);font-size:0.85rem;line-height:1.6;}
+
+.admin-alert{padding:10px 16px;border-radius:8px;margin-bottom:14px;font-size:13px;font-weight:700;display:none;}
+.admin-alert.err{background:#FEE2E2;color:#991B1B;display:block;}
+.admin-alert.ok{background:#D1FAE5;color:#065F46;display:block;}
+
+/* HOW IT WORKS */
+.how-section{padding:50px 0;background:#fff;}
+.steps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px;}
+.step-card{background:#F1F8F1;border-radius:16px;padding:22px 16px;text-align:center;border:2px solid #C8E6C9;}
+.step-num{width:42px;height:42px;background:linear-gradient(135deg,var(--green-dark),var(--green-mid));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:800;color:#fff;margin:0 auto 12px;}
+.step-card h3{font-size:0.9rem;font-weight:700;color:var(--green-dark);margin-bottom:6px;}
+.step-card p{font-size:0.78rem;color:var(--muted);line-height:1.5;}
+
+/* CONTACT */
+.contact-strip{padding:40px 20px;background:linear-gradient(135deg,var(--green-dark),#1a4a1e);text-align:center;}
+.contact-strip h2{color:#fff;font-size:1.3rem;font-weight:800;margin-bottom:6px;}
+.contact-strip p{color:rgba(255,255,255,0.75);font-size:0.9rem;margin-bottom:18px;}
+.contact-btns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;}
+.c-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:12px;font-size:0.88rem;font-weight:700;text-decoration:none;transition:all .2s;}
+.c-btn:hover{transform:translateY(-3px);}
+.c-btn.call{background:#fff;color:var(--green-dark);}
+.c-btn.wa{background:#25D366;color:#fff;}
+.c-btn.home{background:rgba(255,255,255,0.12);color:#fff;border:1.5px solid rgba(255,255,255,0.3);}
+
+/* ADMIN */
+.admin-float{position:fixed;bottom:28px;right:28px;background:var(--navy);color:#fff;padding:11px 18px;border-radius:30px;font-size:13px;font-weight:700;box-shadow:0 4px 16px rgba(0,0,0,0.3);z-index:1000;cursor:pointer;border:none;font-family:"Poppins",sans-serif;transition:.2s;}
+.admin-float:hover{background:var(--green-dark);}
+.admin-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:500;align-items:center;justify-content:center;padding:20px;}
+.admin-overlay.open{display:flex;}
+.admin-panel{background:#fff;border-radius:20px;width:100%;max-width:960px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);}
+.pw-screen{padding:46px 30px;text-align:center;}
+.pw-screen .lock{font-size:3rem;margin-bottom:12px;}
+.pw-screen h2{font-size:1.2rem;font-weight:800;color:var(--navy);margin-bottom:6px;}
+.pw-screen p{color:var(--muted);font-size:0.85rem;margin-bottom:22px;}
+.pw-screen input{width:100%;max-width:300px;padding:12px 16px;border:2px solid #ddd;border-radius:10px;font-size:1rem;font-family:"Poppins",sans-serif;outline:none;text-align:center;letter-spacing:3px;margin:0 auto 12px;display:block;}
+.pw-screen input:focus{border-color:var(--green);}
+.pw-screen .err{color:#e53935;font-size:0.82rem;margin-bottom:8px;display:none;}
+.pw-screen button{padding:11px 28px;background:var(--green-dark);color:#fff;border:none;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:"Poppins",sans-serif;}
+.admin-header{background:linear-gradient(135deg,var(--green-dark),var(--green-mid));padding:16px 22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;border-radius:20px 20px 0 0;}
+.admin-header h1{color:#fff;font-size:1rem;font-weight:800;}
+.btn{padding:8px 14px;border:none;border-radius:8px;font-size:0.82rem;font-weight:700;cursor:pointer;font-family:"Poppins",sans-serif;transition:.2s;}
+.btn-r{background:#EF4444;color:#fff;}
+.btn-n{background:var(--navy);color:#fff;}
+.btn-g{background:#06D6A0;color:#065F46;}
+.btn-y{background:var(--yellow);color:#1a1a1a;}
+.admin-stats-row{display:flex;gap:0;background:#F9FAFB;border-bottom:2px solid #eee;flex-wrap:wrap;}
+.a-stat{padding:14px 22px;border-right:1px solid #eee;min-width:110px;}
+.a-stat .num{font-size:1.5rem;font-weight:800;color:var(--green);}
+.a-stat .lbl{font-size:11px;color:#888;}
+.admin-body{padding:18px;}
+.al-box{padding:10px 16px;border-radius:8px;margin-bottom:12px;font-size:13px;font-weight:700;display:none;}
+.al-box.ok{background:#D1FAE5;color:#065F46;display:block;}
+.al-box.err{background:#FEE2E2;color:#991B1B;display:block;}
+.table-wrap{overflow-x:auto;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.06);}
+table{width:100%;border-collapse:collapse;background:#fff;}
+thead tr{background:#F0F7F0;}
+th{padding:11px 14px;text-align:left;font-size:11px;font-weight:700;color:#5a7a5a;text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid #eee;}
+td{padding:10px 14px;font-size:13px;color:#374151;border-bottom:1px solid #F3F4F6;vertical-align:top;}
+tr:hover td{background:#F9FFF9;}
+.no-data{padding:40px;text-align:center;color:#aaa;}
+.no-data .big{font-size:3rem;margin-bottom:10px;}
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:600;align-items:center;justify-content:center;padding:20px;}
+.modal-ov.open{display:flex;}
+.modal-bx{background:#fff;border-radius:16px;padding:26px;width:100%;max-width:440px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+.close-x{float:right;background:none;border:none;font-size:20px;cursor:pointer;color:#888;}
+.detail-row{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid #f0f0f0;font-size:0.84rem;}
+.detail-row .key{font-weight:700;color:var(--muted);min-width:130px;flex-shrink:0;}
+.close-det{width:100%;padding:11px;background:var(--green-dark);color:#fff;border:none;border-radius:10px;font-size:0.9rem;font-weight:700;cursor:pointer;margin-top:14px;font-family:"Poppins",sans-serif;}
+
+/* FOOTER */
+footer{background:var(--green-dark);color:rgba(255,255,255,0.6);text-align:center;padding:26px 20px;font-size:0.82rem;}
+footer .footer-logo{font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:6px;}
+footer a{color:var(--yellow);}
+.footer-tricolor{display:flex;justify-content:center;margin-top:12px;}
+.footer-tricolor div{height:4px;width:50px;border-radius:2px;}
+.footer-tricolor .s{background:#FF6B00;}.footer-tricolor .w{background:#fff;}.footer-tricolor .g{background:#138808;}
+
+/* STATUS CHECK */
+.status-section{padding:50px 0;background:linear-gradient(135deg,#1B5E20,#2E7D32);}
+.status-box{max-width:520px;margin:0 auto;background:#fff;border-radius:20px;padding:28px;box-shadow:0 16px 50px rgba(0,0,0,.2);}
+.status-box h3{font-size:1.05rem;font-weight:800;color:var(--green-dark);margin-bottom:4px;text-align:center;}
+.status-box p{font-size:0.82rem;color:var(--muted);margin-bottom:18px;text-align:center;}
+.sr-result{margin-top:18px;border-radius:14px;overflow:hidden;display:none;}
+.sr-head{padding:14px 18px;display:flex;align-items:center;gap:10px;font-weight:800;font-size:0.92rem;color:#fff;}
+.sr-body{background:#f9fff9;padding:16px 18px;}
+.sr-row{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid #eee;font-size:0.84rem;}
+.sr-row:last-child{border-bottom:none;}
+.sr-key{font-weight:700;color:var(--muted);min-width:120px;flex-shrink:0;}
+.sr-val{color:var(--text);word-break:break-word;}
+.pdf-download-btn{display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:12px 24px;background:linear-gradient(135deg,var(--green-dark),var(--green-mid));color:#fff;border:none;border-radius:10px;font-size:0.9rem;font-weight:700;cursor:pointer;text-decoration:none;font-family:"Poppins",sans-serif;transition:all .2s;width:100%;justify-content:center;}
+.pdf-download-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(27,94,32,0.35);}
+
+/* PDF UPLOAD IN ADMIN */
+.pdf-upload-area{border:2px dashed #A5D6A7;border-radius:10px;padding:18px;text-align:center;cursor:pointer;background:#F1F8F1;transition:.2s;}
+.pdf-upload-area:hover{border-color:var(--green);}
+.pdf-upload-area input{display:none;}
+
+/* PDF MODAL */
+.pdf-modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:700;align-items:center;justify-content:center;padding:20px;}
+.pdf-modal-ov.open{display:flex;}
+.pdf-modal-bx{background:#fff;border-radius:16px;padding:26px;width:100%;max-width:460px;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+.close-x2{float:right;background:none;border:none;font-size:20px;cursor:pointer;color:#888;}
+
+@media(max-width:600px){
+  .hero h1{font-size:1.7rem;}
+  .steps-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="https://pmkisanwork.github.io/Home/">
+      <div class="nav-logo-icon">🌾</div>
+      <div class="nav-logo-text">All Work Online<span>PM Kisan Status PDF Service</span></div>
+    </a>
+    <div style="display:flex;gap:8px;">
+      <a href="#form" style="color:rgba(255,255,255,0.85);text-decoration:none;font-size:0.82rem;font-weight:600;padding:6px 12px;border-radius:8px;background:rgba(255,255,255,0.1);">📝 Form</a>
+      <a href="#status-check" style="color:rgba(255,255,255,0.85);text-decoration:none;font-size:0.82rem;font-weight:600;padding:6px 12px;border-radius:8px;background:rgba(255,255,255,0.1);">🔍 Status</a>
+    </div>
+  </div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-label">📢 NOTICE</div>
+  <div class="ticker-wrap">
+    <div class="ticker-track">
+      <span>🌾 PM Kisan Status PDF – Sirf ₹50 mein prapt karein</span>
+      <span>✅ Farmer Registration Number zaroori hai</span>
+      <span>📞 Helpline: 7668048141 | 9362572889</span>
+      <span>⏳ 24 hr ke andar PDF Status mein upload kar diya jayega</span>
+      <span>⚡ Payment ke baad UTR number zaroor bharein</span>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <span class="hero-icon">📄</span>
+  <h1>PM Kisan <span>Status PDF</span></h1>
+  <p>Apna PM Kisan Farmer Status PDF prapt karein। Form bharein, payment karein aur 24 hr ke andar PDF aapko bheja jayega।</p>
+  <div class="hero-pills">
+    <div class="pill">✅ 24 Hr Delivery</div>
+    <div class="pill" style="background:rgba(249,168,37,0.3);border-color:var(--yellow);color:var(--yellow);font-weight:800;">💰 Sirf ₹50 mein PDF</div>
+    <div class="pill">🔒 100% Secure</div>
+  </div>
+</div>
+
+<!-- FORM SECTION -->
+<section class="form-section" id="form">
+  <div class="section-wrap">
+    <div class="section-title">
+      <h2>📝 Abhi <span>Form Bharein</span></h2>
+      <div class="title-line"></div>
+    </div>
+
+    <div class="form-wrapper">
+      <div class="form-header">
+        <h2>🌾 PM Kisan Status PDF Form</h2>
+        <p>Sirf <strong style="color:var(--yellow);font-size:1.1rem;">₹50</strong> mein PDF prapt karein — 24 hr ke andar</p>
+      </div>
+
+      <div class="form-notice-bar">
+        <strong>📢 Dhyan Dein:</strong> Payment karne ke baad UTR number zaroor bharein। Form submit hone ke baad <strong>24 hr ke andar PDF Status mein upload kar diya jayega</strong> — aap Registration Number se status check karke download kar sakte hain।
+      </div>
+
+      <div class="form-body">
+        <div id="frmAlert" class="admin-alert"></div>
+
+        <!-- Farmer Reg No -->
+        <div class="form-group">
+          <label>Farmer Registration Number <span class="req">*</span></label>
+          <input type="text" id="fRegNo" placeholder="PM Kisan Farmer Registration Number">
+        </div>
+
+        <!-- Farmer Name -->
+        <div class="form-group">
+          <label>Farmer Name (Kisan ka Naam) <span class="req">*</span></label>
+          <input type="text" id="fName" placeholder="Poora naam likhein">
+        </div>
+
+        <!-- Mobile -->
+        <div class="form-group">
+          <label>Mobile Number <span class="req">*</span></label>
+          <input type="tel" id="fMobile" placeholder="10 digit mobile number" maxlength="10">
+        </div>
+
+        <!-- QR Payment -->
+        <div class="qr-box">
+          <div class="qr-title">💳 Payment Karein – QR Code Scan Karein</div>
+          <div class="qr-sub">PhonePe / GPay / Paytm / Any UPI app se scan karein</div>
+          <img src="data:image/png;base64,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" alt="Scan to Pay" />
+          <div class="qr-note">💰 <strong>₹50</strong> payment karein → UTR note karein → neeche bharein</div>
+        </div>
+
+        <!-- UTR -->
+        <div class="form-group">
+          <label>UTR / Transaction Number <span class="req">*</span></label>
+          <input type="text" id="fUtr" placeholder="Payment ka UTR ya Transaction number">
+        </div>
+
+        <button class="submit-btn" id="submitBtn" onclick="submitForm()">
+          🌾 Form Submit Karein
+        </button>
+
+        <div class="form-body" style="padding:0;">
+          <p style="text-align:center;font-size:0.75rem;color:var(--muted);margin-top:12px;line-height:1.6;">
+            Form submit hone ke baad 24 hr ke andar aapke number par call kiya jayega।
+          </p>
+        </div>
+
+        <div class="success-msg" id="successMsg">
+          <div class="tick">✅</div>
+          <h3>Form Successfully Submit Ho Gaya!</h3>
+          <p>Dhanyawad! Aapka form hamare paas pahunch gaya।<br/>
+          <strong>24 hr ke andar PDF Status mein upload kar diya jayega।</strong><br/>
+          Apna Registration Number se Status Check karke PDF download karein।</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section">
+  <div class="section-wrap">
+    <div class="section-title">
+      <h2>🔄 Kaise Kaam Karta Hai <span>Yeh Service</span></h2>
+      <div class="title-line"></div>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card"><div class="step-num">1</div><h3>📝 Form Bharein</h3><p>Farmer Registration No. aur apna naam sahi bharein।</p></div>
+      <div class="step-card"><div class="step-num">2</div><h3>💳 Payment Karein</h3><p>QR code scan karke payment karein aur UTR note karein।</p></div>
+      <div class="step-card"><div class="step-num">3</div><h3>📤 UTR Bharein</h3><p>Payment ka UTR / Transaction number form mein bharein।</p></div>
+      <div class="step-card"><div class="step-num">4</div><h3>📄 PDF Milegi</h3><p>24 hr ke andar aapke number par call aur PDF bheja jayega।</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- STATUS CHECK SECTION -->
+<section class="status-section" id="status-check">
+  <div class="section-wrap">
+    <div class="section-title">
+      <h2 style="color:#fff;">🔍 Apna <span style="color:var(--yellow);">Status Check</span> Karein</h2>
+      <div class="title-line"></div>
+      <p style="color:rgba(255,255,255,0.75);margin-top:8px;">Apna Farmer Registration Number dalein aur PDF status dekhhein</p>
+    </div>
+    <div class="status-box">
+      <h3>📄 PDF Status Check</h3>
+      <p>Apna PM Kisan Farmer Registration Number neeche dalein</p>
+      <div style="background:#E8F5E9;border-left:4px solid var(--green);padding:10px 14px;border-radius:0 10px 10px 0;margin-bottom:16px;font-size:0.82rem;color:var(--green-dark);line-height:1.6;">
+        ⏳ <strong>24 hr ke andar</strong> PDF Status mein upload kar diya jayega — yahan Registration Number se check karein aur download karein।
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <input type="text" id="statusRegNo" placeholder="Farmer Registration Number"
+          style="flex:1;min-width:200px;padding:12px 14px;border:2px solid #C8E6C9;border-radius:10px;font-size:0.9rem;font-family:'Poppins',sans-serif;outline:none;">
+        <button onclick="checkStatus()" style="padding:12px 20px;background:var(--green-dark);color:#fff;border:none;border-radius:10px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;white-space:nowrap;">🔍 Check Karein</button>
+      </div>
+      <div id="srResult" class="sr-result"></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-strip">
+  <h2>📞 Madad Chahiye?</h2>
+  <p>Timing: 10AM – 5PM | Sunday Off</p>
+  <div class="contact-btns">
+    <a href="tel:7668048141" class="c-btn call">📞 7668048141</a>
+    <a href="https://wa.me/918461246946" target="_blank" class="c-btn wa">💬 WhatsApp</a>
+    <a href="https://pmkisanwork.github.io/Home/" class="c-btn home">🏠 Home</a>
+  </div>
+</section>
+
+<!-- PDF UPLOAD MODAL -->
+<div class="pdf-modal-ov" id="pdfModal">
+  <div class="pdf-modal-bx">
+    <button class="close-x2" onclick="closePdfModal()">✕</button>
+    <h3 style="color:var(--green-dark);margin-bottom:6px;">📤 PDF Upload Karein</h3>
+    <div id="pdfFarmerInfo" style="background:var(--green-pale);padding:10px 14px;border-radius:10px;margin-bottom:16px;font-size:0.84rem;color:var(--green-dark);font-weight:600;"></div>
+    <input type="hidden" id="pdfTargetId">
+    <div class="pdf-upload-area" onclick="document.getElementById('pdfFileInput').click()">
+      <input type="file" id="pdfFileInput" accept=".pdf,.jpg,.jpeg,.png" onchange="handlePdfSelect(this)">
+      <div style="font-size:2rem;margin-bottom:8px;">📄</div>
+      <p style="font-size:0.85rem;color:var(--muted);">PDF ya Image file select karein<br/><small>PDF, JPG, PNG – max 2MB</small></p>
+      <div id="selectedFileName" style="margin-top:8px;font-size:0.8rem;color:var(--green);font-weight:600;"></div>
+    </div>
+    <div id="pdfUploadAlert" style="padding:8px 12px;border-radius:8px;margin:10px 0;font-size:13px;font-weight:700;display:none;"></div>
+    <div style="display:flex;gap:10px;margin-top:12px;">
+      <button onclick="uploadPdf()" style="flex:1;padding:11px;background:var(--green-dark);color:#fff;border:none;border-radius:10px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;">📤 Upload & Save</button>
+      <button onclick="closePdfModal()" style="padding:11px 16px;background:#ddd;color:#333;border:none;border-radius:10px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">🇮🇳 All Work Online</div>
+  <p>Visit: <a href="https://Allworkonline.xyz">Allworkonline.xyz</a> | Designed by S.S.G Web Developer</p>
+  <p style="margin-top:4px;">© 2024 All Work Online. All Rights Reserved.</p>
+  <div class="footer-tricolor"><div class="s"></div><div class="w"></div><div class="g"></div></div>
+</footer>
+
+<!-- ADMIN FLOAT -->
+<button class="admin-float" onclick="openAdmin()">⚙️ Admin</button>
+
+<!-- ADMIN OVERLAY -->
+<div class="admin-overlay" id="adminOverlay">
+  <!-- PW SCREEN -->
+  <div class="admin-panel" id="pwPanel">
+    <div class="pw-screen">
+      <div class="lock">🔐</div>
+      <h2>Admin Login</h2>
+      <p>PM Kisan PDF Service – Admin Panel</p>
+      <div class="err" id="pwErr">❌ Galat password!</div>
+      <input type="password" id="pwInput" placeholder="Password" onkeydown="if(event.key==='Enter')checkPw()">
+      <br><br>
+      <button onclick="checkPw()">Login Karein →</button>
+      <br><br>
+      <a onclick="closeAdmin()" style="color:#888;font-size:0.8rem;cursor:pointer;">✕ Band Karein</a>
+    </div>
+  </div>
+
+  <!-- ADMIN CONTENT -->
+  <div class="admin-panel" id="adminContent" style="display:none;">
+    <div class="admin-header">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#FFD54F,#FF6B00);display:flex;align-items:center;justify-content:center;font-size:20px;">👨‍💼</div>
+        <div>
+          <h1>📄 PM Kisan PDF – Admin Panel</h1>
+          <span id="welcomeMsg" style="color:#A5D6A7;font-size:0.78rem;font-weight:600;">Welcome, Shivam Gupta ji! 🙏</span>
+          <span style="color:rgba(255,255,255,0.5);font-size:0.68rem;display:block;">Sync: <span id="syncStatus">—</span></span>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-g" onclick="loadData()">🔄 Refresh</button>
+        <button class="btn btn-y" onclick="exportCSV()">⬇️ CSV</button>
+        <button class="btn btn-r" onclick="adminLogout()">🚪 Logout</button>
+        <button class="btn btn-n" onclick="closeAdmin()">✕</button>
+      </div>
+    </div>
+
+    <div class="admin-stats-row">
+      <div class="a-stat"><div class="num" id="st-total">0</div><div class="lbl">Total</div></div>
+      <div class="a-stat"><div class="num" id="st-new">0</div><div class="lbl">New</div></div>
+      <div class="a-stat"><div class="num" id="st-done">0</div><div class="lbl">Done</div></div>
+      <div class="a-stat"><div class="num" id="st-pending">0</div><div class="lbl">Pending</div></div>
+    </div>
+
+    <div class="admin-body">
+      <div class="al-box" id="adminAlert"></div>
+      <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+        <input type="text" id="srch" placeholder="🔍 Naam ya mobile..." oninput="renderTable()"
+          style="padding:8px 12px;border:2px solid #ddd;border-radius:8px;font-size:13px;font-family:Poppins,sans-serif;outline:none;flex:1;min-width:180px;">
+        <select id="stFil" onchange="renderTable()"
+          style="padding:8px 12px;border:2px solid #ddd;border-radius:8px;font-size:13px;font-family:Poppins,sans-serif;outline:none;">
+          <option value="All">Sab Status</option>
+          <option>Processing</option><option>Done</option><option>Pending</option><option>Rejected</option>
+        </select>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>#</th><th>Naam</th><th>Mobile</th><th>Reg. No.</th>
+            <th>UTR</th><th>Tarikh</th><th>Status</th><th>PDF</th><th>Action</th>
+          </tr></thead>
+          <tbody id="dataTable"></tbody>
+        </table>
+        <div id="noData" class="no-data" style="display:none;"><div class="big">📋</div><p>Koi record nahi hai।</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-ov" id="detailModal">
+  <div class="modal-bx">
+    <button class="close-x" onclick="closeDetail()">✕</button>
+    <h3 style="color:var(--green-dark);margin-bottom:14px;">📋 Form Detail</h3>
+    <div id="detailContent"></div>
+    <button class="close-det" onclick="closeDetail()">Band Karein</button>
+  </div>
+</div>
+
+<script>
+const ADMIN_PW  = "Shivamgupta$264491";
+const BIN_ID    = "69ba7978c3097a1dd536d863";
+const BIN_KEY   = "$2a$10$yN0HYHeVAablf.1euvFDXu4CYAyG4E2ta9FQUi7mxFa/Zpp6Z22Va";
+const BIN_API   = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+const LOC_KEY   = "pmkisan_pdf_submissions";
+
+let records = [];
+let pdfBase64 = null;
+
+// ── STORAGE ──
+function saveLocal(){ localStorage.setItem(LOC_KEY, JSON.stringify(records)); }
+
+// JSONBin fetch helper
+async function binGet(){
+  const r = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`,{
+    method:"GET",
+    headers:{"X-Master-Key":BIN_KEY,"X-Bin-Meta":"false","Content-Type":"application/json"}
+  });
+  if(!r.ok) throw new Error("GET HTTP "+r.status);
+  return await r.json();
+}
+
+async function binPut(data){
+  const r = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`,{
+    method:"PUT",
+    headers:{"Content-Type":"application/json","X-Master-Key":BIN_KEY,"X-Bin-Versioning":"false"},
+    body: JSON.stringify(data)
+  });
+  if(!r.ok) throw new Error("PUT HTTP "+r.status);
+  return await r.json();
+}
+
+async function loadData(){
+  setSS("⏳ Loading...");
+  try{
+    const d = await binGet();
+    records = (d && d.pmkisan_pdf) ? d.pmkisan_pdf : [];
+    saveLocal();
+    setSS("✅ Cloud se sync");
+  }catch(e){
+    const raw = localStorage.getItem(LOC_KEY);
+    records = raw ? JSON.parse(raw) : [];
+    setSS("📱 Local (" + e.message + ")");
+  }
+  renderTable(); updateStats();
+}
+
+async function saveData(){
+  saveLocal();
+  setSS("⏳ Saving...");
+  try{
+    // Get existing data first to preserve other keys
+    let ex = {};
+    try{ ex = await binGet(); }catch(e2){}
+    await binPut({...ex, pmkisan_pdf: records});
+    setSS("✅ Cloud mein save");
+  }catch(e){
+    setSS("⚠️ Local only – " + e.message);
+    console.error("saveData error:", e);
+  }
+}
+
+function setSS(m){ const e=document.getElementById("syncStatus"); if(e) e.textContent=m; }
+
+// ── FORM SUBMIT ──
+async function submitForm(){
+  const regNo  = document.getElementById("fRegNo").value.trim();
+  const name   = document.getElementById("fName").value.trim();
+  const mobile = document.getElementById("fMobile").value.trim();
+  const utr    = document.getElementById("fUtr").value.trim();
+
+  if(!regNo)               { showFrmAlert("⚠️ Farmer Registration Number bharein!", "err"); return; }
+  if(!name)                { showFrmAlert("⚠️ Farmer Name bharein!", "err"); return; }
+  if(!mobile||mobile.length!==10){ showFrmAlert("⚠️ Sahi 10 digit mobile number bharein!", "err"); return; }
+  if(!utr)                 { showFrmAlert("⚠️ UTR / Transaction number bharein!", "err"); return; }
+
+  const btn = document.getElementById("submitBtn");
+  btn.disabled=true; btn.textContent="⏳ Submit ho raha hai...";
+
+  const entry = {
+    id: Date.now(), regNo, name, mobile, utr,
+    status: "Processing", pdfData: null, pdfName: null,
+    date: new Date().toLocaleString("hi-IN",{timeZone:"Asia/Kolkata"})
+  };
+
+  try{
+    let ex = {};
+    try{ ex = await binGet(); }catch(e2){}
+    const existing = (ex && ex.pmkisan_pdf) ? ex.pmkisan_pdf : [];
+    existing.unshift(entry);
+    await binPut({...ex, pmkisan_pdf: existing});
+    records = existing; saveLocal();
+    setSS("✅ Cloud mein save");
+  }catch(e){
+    records.unshift(entry);
+    saveLocal();
+    setSS("⚠️ Local only");
+    console.error("submitForm save error:", e);
+  }
+
+  btn.style.display="none";
+  document.getElementById("successMsg").style.display="block";
+}
+
+function showFrmAlert(msg,type){
+  const e=document.getElementById("frmAlert");
+  e.textContent=msg; e.className="admin-alert "+type;
+  setTimeout(()=>e.className="admin-alert",4000);
+}
+
+// ── STATUS CHECK (Public) ──
+async function checkStatus(){
+  const regNo = document.getElementById("statusRegNo").value.trim();
+  const res   = document.getElementById("srResult");
+
+  if(!regNo){
+    res.style.display="block";
+    res.innerHTML=`<div class="sr-head" style="background:#EF4444;">⚠️ Farmer Registration Number dalein</div>`;
+    return;
+  }
+
+  res.style.display="block";
+  res.innerHTML=`<div class="sr-head" style="background:#888;">⏳ Dhundha ja raha hai...</div>`;
+
+  // Load latest from cloud always
+  let all = [...records];
+  try{
+    const d = await binGet();
+    if(d && d.pmkisan_pdf){ all = d.pmkisan_pdf; records = all; saveLocal(); }
+  }catch(e){ console.warn("checkStatus cloud load failed:", e.message); }
+
+  // Search by Registration No (case-insensitive)
+  const found = all.filter(r => r.regNo.trim().toLowerCase() === regNo.toLowerCase());
+
+  if(!found.length){
+    res.innerHTML=`
+      <div class="sr-head" style="background:#EF4444;">❌ Koi record nahi mila</div>
+      <div class="sr-body" style="text-align:center;color:var(--muted);padding:20px;">
+        Is Registration Number se koi application registered nahi hai।<br/>
+        <strong>Pehle upar form bharein।</strong>
+      </div>`;
+    return;
+  }
+
+  const s = found[0];
+  const stColors = { Processing:"#F59E0B", Done:"#22C55E", Pending:"#3B82F6", Rejected:"#EF4444" };
+  const stEmoji  = { Processing:"⏳", Done:"✅", Pending:"🔄", Rejected:"❌" };
+  const col = stColors[s.status] || "#888";
+
+  const pdfBtn = s.pdfData
+    ? `<button class="pdf-download-btn" onclick="downloadPdf(${s.id})">⬇️ PDF Download Karein</button>`
+    : `<div style="background:#FEF3C7;border-left:4px solid var(--yellow);padding:10px 14px;border-radius:0 8px 8px 0;font-size:0.82rem;color:#92400E;margin-top:12px;">⏳ Aapka PDF abhi ready nahi hua hai। Thodi der mein check karein।</div>`;
+
+  res.innerHTML=`
+    <div class="sr-head" style="background:${col};">
+      ${stEmoji[s.status]||"📋"} Application Mili – Status: ${s.status}
+    </div>
+    <div class="sr-body">
+      <div class="sr-row"><div class="sr-key">👤 Naam</div><div class="sr-val">${s.name}</div></div>
+      <div class="sr-row"><div class="sr-key">🌾 Reg. No.</div><div class="sr-val">${s.regNo}</div></div>
+      <div class="sr-row"><div class="sr-key">📱 Mobile</div><div class="sr-val">${s.mobile}</div></div>
+      <div class="sr-row"><div class="sr-key">📅 Submit Date</div><div class="sr-val">${s.date}</div></div>
+      <div class="sr-row"><div class="sr-key">📊 Status</div><div class="sr-val"><strong style="color:${col};">${s.status}</strong></div></div>
+      ${pdfBtn}
+    </div>`;
+}
+
+async function downloadPdf(id){
+  // Try from current records first
+  let rec = records.find(r=>r.id===id);
+  // If no pdfData, try fetching fresh from cloud
+  if(!rec || !rec.pdfData){
+    try{
+      const d = await binGet();
+      if(d && d.pmkisan_pdf){
+        records = d.pmkisan_pdf; saveLocal();
+        rec = records.find(r=>r.id===id);
+      }
+    }catch(e){}
+  }
+  if(!rec || !rec.pdfData){ alert("PDF abhi available nahi hai। Thodi der baad try karein।"); return; }
+  const a = document.createElement("a");
+  a.href = rec.pdfData;
+  a.download = rec.pdfName || "PMKisan-Status.pdf";
+  a.click();
+}
+
+// ── ADMIN ──
+function openAdmin(){
+  const li = sessionStorage.getItem("pmkisan_admin")==="1";
+  document.getElementById("pwPanel").style.display      = li?"none":"block";
+  document.getElementById("adminContent").style.display = li?"block":"none";
+  document.getElementById("adminOverlay").classList.add("open");
+  if(li) loadData();
+}
+function closeAdmin(){ document.getElementById("adminOverlay").classList.remove("open"); }
+
+function checkPw(){
+  if(document.getElementById("pwInput").value === ADMIN_PW){
+    sessionStorage.setItem("pmkisan_admin","1");
+    document.getElementById("pwPanel").style.display="none";
+    document.getElementById("adminContent").style.display="block";
+    loadData();
+    showAdminAlert("🙏 Welcome Shivam Gupta ji! Login ho gaye।","ok");
+  } else {
+    const e=document.getElementById("pwErr"); e.style.display="block";
+    document.getElementById("pwInput").value="";
+    setTimeout(()=>e.style.display="none",3000);
+  }
+}
+
+function adminLogout(){
+  sessionStorage.removeItem("pmkisan_admin");
+  document.getElementById("pwInput").value="";
+  document.getElementById("adminContent").style.display="none";
+  document.getElementById("pwPanel").style.display="block";
+}
+
+function updateStats(){
+  document.getElementById("st-total").textContent   = records.length;
+  document.getElementById("st-new").textContent     = records.filter(r=>r.status==="Processing").length;
+  document.getElementById("st-done").textContent    = records.filter(r=>r.status==="Done").length;
+  document.getElementById("st-pending").textContent = records.filter(r=>r.status==="Pending").length;
+}
+
+function renderTable(){
+  const q   = (document.getElementById("srch").value||"").toLowerCase();
+  const fil = document.getElementById("stFil").value;
+  let list  = records.filter(r=>{
+    const mq = !q || r.name.toLowerCase().includes(q) || r.mobile.includes(q) || r.regNo.toLowerCase().includes(q);
+    const mf = fil==="All" || r.status===fil;
+    return mq && mf;
+  });
+  const tb = document.getElementById("dataTable");
+  const nd = document.getElementById("noData");
+  if(!list.length){ tb.innerHTML=""; nd.style.display="block"; return; }
+  nd.style.display="none";
+
+  tb.innerHTML = list.map((r,i)=>`
+    <tr>
+      <td>${i+1}</td>
+      <td><strong>${r.name}</strong><br/><small style="color:#9CA3AF;">${r.regNo}</small></td>
+      <td><a href="tel:${r.mobile}" style="color:var(--green);font-weight:700;">${r.mobile}</a></td>
+      <td style="font-size:12px;">${r.regNo}</td>
+      <td style="font-size:12px;">${r.utr}</td>
+      <td style="font-size:11px;color:#888;">${r.date}</td>
+      <td>
+        <select onchange="quickSt(${r.id},this.value)" style="padding:4px 8px;border:2px solid #C8E6C9;border-radius:8px;font-size:12px;font-family:Poppins,sans-serif;outline:none;background:#f9fff9;">
+          <option ${r.status==="Processing"?"selected":""}>Processing</option>
+          <option ${r.status==="Done"?"selected":""}>Done</option>
+          <option ${r.status==="Pending"?"selected":""}>Pending</option>
+          <option ${r.status==="Rejected"?"selected":""}>Rejected</option>
+        </select>
+      </td>
+      <td>
+        ${r.pdfData
+          ? `<span style="color:var(--green);font-weight:700;font-size:12px;">✅ PDF Ready</span>`
+          : `<span style="color:#F59E0B;font-size:12px;">⏳ Upload Nahi</span>`
+        }
+      </td>
+      <td>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;">
+          <button class="btn" style="background:#E8F5E9;color:var(--green-dark);padding:4px 8px;font-size:11px;" onclick="openPdfModal(${r.id})" title="PDF Upload">📤</button>
+          <button class="btn" style="background:#E3F2FD;color:#1565C0;padding:4px 8px;font-size:11px;" onclick="showDetail(${r.id})" title="Detail">👁️</button>
+          <button class="btn btn-r" style="padding:4px 8px;font-size:11px;" onclick="deleteRec(${r.id})" title="Delete">🗑️</button>
+        </div>
+      </td>
+    </tr>`).join("");
+}
+
+async function quickSt(id,st){
+  records = records.map(r=>r.id===id?{...r,status:st}:r);
+  await saveData(); renderTable(); updateStats();
+}
+
+async function deleteRec(id){
+  if(!confirm("Delete karna chahte hain?")) return;
+  records = records.filter(r=>r.id!==id);
+  await saveData(); renderTable(); updateStats();
+  showAdminAlert("🗑️ Delete ho gaya।","ok");
+}
+
+function showDetail(id){
+  const r = records.find(r=>r.id===id); if(!r) return;
+  document.getElementById("detailContent").innerHTML=`
+    <div class="detail-row"><div class="key">Kisan Naam</div><div class="val">${r.name}</div></div>
+    <div class="detail-row"><div class="key">Mobile</div><div class="val"><a href="tel:${r.mobile}" style="color:var(--green);font-weight:700;">${r.mobile}</a></div></div>
+    <div class="detail-row"><div class="key">Reg. Number</div><div class="val">${r.regNo}</div></div>
+    <div class="detail-row"><div class="key">UTR Number</div><div class="val">${r.utr}</div></div>
+    <div class="detail-row"><div class="key">Status</div><div class="val"><strong>${r.status}</strong></div></div>
+    <div class="detail-row"><div class="key">PDF</div><div class="val">${r.pdfData ? '<strong style="color:var(--green)">✅ PDF Uploaded – '+r.pdfName+'</strong>' : '❌ PDF Upload Nahi Hua'}</div></div>
+    <div class="detail-row"><div class="key">Submit Tarikh</div><div class="val">${r.date}</div></div>
+    ${r.pdfData ? `<button class="pdf-download-btn" onclick="downloadPdf(${r.id})">⬇️ PDF Download Karein</button>` : ''}
+  `;
+  document.getElementById("detailModal").classList.add("open");
+}
+function closeDetail(){ document.getElementById("detailModal").classList.remove("open"); }
+
+// ── PDF UPLOAD ──
+function openPdfModal(id){
+  const r = records.find(r=>r.id===id); if(!r) return;
+  document.getElementById("pdfTargetId").value = id;
+  document.getElementById("pdfFarmerInfo").textContent = "👤 "+r.name+" | 📱 "+r.mobile+" | Reg: "+r.regNo;
+  document.getElementById("selectedFileName").textContent = r.pdfName ? "✅ Pehle se upload: "+r.pdfName : "";
+  document.getElementById("pdfUploadAlert").style.display="none";
+  pdfBase64 = null;
+  document.getElementById("pdfFileInput").value="";
+  document.getElementById("pdfModal").classList.add("open");
+}
+
+function closePdfModal(){ document.getElementById("pdfModal").classList.remove("open"); pdfBase64=null; }
+
+function handlePdfSelect(input){
+  const file = input.files[0];
+  if(!file){ return; }
+  if(file.size > 2*1024*1024){
+    showPdfAlert("⚠️ File 2MB se badi hai! Chhoti file select karein।","#FEE2E2","#991B1B");
+    input.value=""; return;
+  }
+  const reader = new FileReader();
+  reader.onload = ev => {
+    pdfBase64 = ev.target.result; // full data URL
+    document.getElementById("selectedFileName").textContent = "✅ Selected: "+file.name;
+    document.getElementById("selectedFileName")._name = file.name;
+  };
+  reader.readAsDataURL(file);
+}
+
+async function uploadPdf(){
+  const id = parseInt(document.getElementById("pdfTargetId").value);
+  if(!pdfBase64){ showPdfAlert("⚠️ Pehle file select karein।","#FEF3C7","#92400E"); return; }
+  const pdfName = document.getElementById("selectedFileName")._name || "PMKisan-Status.pdf";
+
+  showPdfAlert("⏳ Upload ho raha hai...","#E0E7FF","#3730A3");
+
+  records = records.map(r => r.id===id ? {...r, pdfData:pdfBase64, pdfName, status:"Done"} : r);
+  await saveData();
+  renderTable(); updateStats();
+  showPdfAlert("✅ PDF upload ho gaya! Customer download kar sakta hai।","#D1FAE5","#065F46");
+  setTimeout(()=>closePdfModal(), 2000);
+}
+
+function showPdfAlert(msg,bg,col){
+  const e=document.getElementById("pdfUploadAlert");
+  e.textContent=msg; e.style.background=bg; e.style.color=col;
+  e.style.display="block";
+}
+
+function exportCSV(){
+  if(!records.length){ alert("Koi data nahi।"); return; }
+  const h=["Naam","Mobile","Reg No","UTR","Status","PDF Status","Tarikh"];
+  const rows=records.map(r=>[r.name,r.mobile,r.regNo,r.utr,r.status,r.pdfData?"Uploaded":"Not Uploaded",r.date].map(v=>`"${v}"`).join(","));
+  const csv=[h.join(","),...rows].join("\n");
+  const a=document.createElement("a");
+  a.href="data:text/csv;charset=utf-8,\uFEFF"+encodeURIComponent(csv);
+  a.download="pmkisan-pdf-"+new Date().toISOString().split("T")[0]+".csv";
+  a.click();
+}
+
+function showAdminAlert(msg,type){
+  const e=document.getElementById("adminAlert");
+  e.textContent=msg; e.className="al-box "+type;
+  setTimeout(()=>e.className="al-box",5000);
+}
+
+document.getElementById("adminOverlay").addEventListener("click",function(e){ if(e.target===this) closeAdmin(); });
+
+// Auto-load from cloud on page start (for status check to work)
+(async()=>{
+  try{
+    const d = await binGet();
+    if(d && d.pmkisan_pdf){ records = d.pmkisan_pdf; saveLocal(); }
+  }catch(e){
+    const raw = localStorage.getItem(LOC_KEY);
+    if(raw) records = JSON.parse(raw);
+  }
+})();
+</script>
