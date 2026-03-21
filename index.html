@@ -475,7 +475,6 @@ footer a{color:var(--yellow);}
 const ADMIN_PW  = "Shivamgupta$264491";
 const BIN_ID    = "69ba7978c3097a1dd536d863";
 const BIN_KEY   = "$2a$10$yN0HYHeVAablf.1euvFDXu4CYAyG4E2ta9FQUi7mxFa/Zpp6Z22Va";
-const BIN_API   = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 const LOC_KEY   = "pmkisan_pdf_submissions";
 
 let records = [];
@@ -484,35 +483,38 @@ let pdfBase64 = null;
 // ── STORAGE ──
 function saveLocal(){ localStorage.setItem(LOC_KEY, JSON.stringify(records)); }
 
-// JSONBin fetch helper
+// JSONBin helpers
 async function binGet(){
   const r = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`,{
     method:"GET",
-    headers:{"X-Master-Key":BIN_KEY,"X-Bin-Meta":"false","Content-Type":"application/json"}
+    headers:{"X-Master-Key":BIN_KEY,"X-Bin-Meta":"false"}
   });
-  if(!r.ok) throw new Error("GET HTTP "+r.status);
-  return await r.json();
+  if(!r.ok) throw new Error("GET " + r.status);
+  const d = await r.json();
+  return d;
 }
 
 async function binPut(data){
+  // Pehle existing data fetch karo taaki koi key delete na ho
+  let existing = {};
+  try{
+    existing = await binGet();
+  }catch(e){}
+  // Merge karke save karo
+  const merged = {...existing, ...data};
   const r = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`,{
     method:"PUT",
     headers:{"Content-Type":"application/json","X-Master-Key":BIN_KEY,"X-Bin-Versioning":"false"},
-    body: JSON.stringify(data)
+    body: JSON.stringify(merged)
   });
-  if(!r.ok) throw new Error("PUT HTTP "+r.status);
+  if(!r.ok) throw new Error("PUT " + r.status);
   return await r.json();
 }
 
 async function loadData(){
   setSS("⏳ Loading...");
   try{
-    const r = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`,{
-      method:"GET",
-      headers:{"X-Master-Key":BIN_KEY,"X-Bin-Meta":"false"}
-    });
-    if(!r.ok) throw new Error("HTTP "+r.status);
-    const d = await r.json();
+    const d = await binGet();
     records = (d && d.pmkisan_pdf) ? d.pmkisan_pdf : [];
     saveLocal();
     setSS("✅ Cloud se sync (" + records.length + " records)");
@@ -528,17 +530,11 @@ async function saveData(){
   saveLocal();
   setSS("⏳ Saving...");
   try{
-    // Direct PUT with current records — no refetch to avoid overwriting
-    const r = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`,{
-      method:"PUT",
-      headers:{"Content-Type":"application/json","X-Master-Key":BIN_KEY,"X-Bin-Versioning":"false"},
-      body: JSON.stringify({ pmkisan_pdf: records })
-    });
-    if(!r.ok) throw new Error("PUT HTTP "+r.status);
+    await binPut({ pmkisan_pdf: records });
     setSS("✅ Cloud mein save");
   }catch(e){
     setSS("⚠️ Local only – " + e.message);
-    console.error("saveData error:", e);
+    console.error("saveData:", e);
   }
 }
 
@@ -566,29 +562,21 @@ async function submitForm(){
   };
 
   try{
-    // Load latest first to not lose existing records
     let existing = [...records];
     try{
       const d = await binGet();
       if(d && d.pmkisan_pdf) existing = d.pmkisan_pdf;
     }catch(e2){}
-    // Add new entry at top
     existing.unshift(entry);
     records = existing;
     saveLocal();
-    // Save to cloud
-    const r = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`,{
-      method:"PUT",
-      headers:{"Content-Type":"application/json","X-Master-Key":BIN_KEY,"X-Bin-Versioning":"false"},
-      body: JSON.stringify({ pmkisan_pdf: records })
-    });
-    if(!r.ok) throw new Error("PUT HTTP "+r.status);
+    await binPut({ pmkisan_pdf: records });
     setSS("✅ Cloud mein save");
   }catch(e){
     records.unshift(entry);
     saveLocal();
-    setSS("⚠️ Local only");
-    console.error("submitForm save error:", e);
+    setSS("⚠️ Local only – " + e.message);
+    console.error("submitForm:", e);
   }
 
   btn.style.display="none";
@@ -659,7 +647,7 @@ async function checkStatus(){
 }
 
 async function downloadPdf(id){
-  // Pehle is device ke localStorage mein check karo
+  // Step 1: Is device ke localStorage mein check karo
   const stored = localStorage.getItem("pdf_" + id);
   if(stored){
     try{
@@ -667,30 +655,18 @@ async function downloadPdf(id){
       const a = document.createElement("a");
       a.href = obj.data;
       a.download = obj.name || "PMKisan-Status.pdf";
+      document.body.appendChild(a);
       a.click();
+      document.body.removeChild(a);
       return;
-    }catch(e){}
+    }catch(e){ console.warn("localStorage read error:", e); }
   }
 
-  // Cloud mein bhi check karo pdfData ke liye
-  try{
-    const d = await binGet();
-    if(d && d.pmkisan_pdf){
-      const rec = d.pmkisan_pdf.find(r=>r.id===id);
-      if(rec && rec.pdfData){
-        const a = document.createElement("a");
-        a.href = rec.pdfData;
-        a.download = rec.pdfName || "PMKisan-Status.pdf";
-        a.click();
-        return;
-      }
-    }
-  }catch(e){}
-
-  // PDF is device pe nahi hai — WhatsApp se maango
-  const msg = "Namaste! Mera PM Kisan Status PDF ready hai. Kripya PDF WhatsApp par bhejein.\nReg No: " + (records.find(r=>r.id===id)||{}).regNo;
+  // Step 2: PDF is device pe nahi — WhatsApp pe request bhejo
+  const rec = records.find(r=>r.id===id) || {};
+  const msg = "Namaste ji! 🙏\nMera PM Kisan Status PDF ready ho gaya hai.\nKripya PDF WhatsApp par bhejein.\n\nNaam: " + (rec.name||"") + "\nReg No: " + (rec.regNo||"") + "\nMobile: " + (rec.mobile||"");
   const waUrl = "https://wa.me/917668048141?text=" + encodeURIComponent(msg);
-  if(confirm("⚠️ PDF is device pe available nahi hai।\n\nAdmin se WhatsApp par PDF maangein?\n📞 7668048141")){
+  if(confirm("📄 PDF download ke liye:\n\nYeh PDF admin ke device pe save hai.\nAdmin ko WhatsApp par request bhejein?\n\n📞 7668048141")){
     window.open(waUrl, "_blank");
   }
 }
@@ -844,35 +820,33 @@ async function uploadPdf(){
   if(!pdfBase64){ showPdfAlert("⚠️ Pehle file select karein।","#FEF3C7","#92400E"); return; }
   const pdfName = document.getElementById("selectedFileName")._name || "PMKisan-Status.pdf";
 
-  showPdfAlert("⏳ Upload ho raha hai...","#E0E7FF","#3730A3");
+  showPdfAlert("⏳ Save ho raha hai...","#E0E7FF","#3730A3");
 
-  // 1. PDF ko localStorage mein save karo (is device ke liye)
+  // Step 1: PDF ko localStorage mein save karo (is device ke liye fast download)
   try{
     localStorage.setItem("pdf_" + id, JSON.stringify({ data: pdfBase64, name: pdfName }));
-  }catch(e){ console.warn("localStorage save failed:", e); }
+  }catch(e){ console.warn("localStorage full:", e); }
 
-  // 2. Record update karo — pdfData bhi cloud mein save karo (cross-device download ke liye)
+  // Step 2: Record update — sirf flag cloud mein (PDF data nahi — size limit avoid)
   records = records.map(r => r.id===id
-    ? {...r, pdfAvailable:true, pdfName:pdfName, pdfData:pdfBase64, status:"Done"}
+    ? {...r, pdfAvailable:true, pdfName:pdfName, pdfData:null, status:"Done"}
     : r
   );
   saveLocal();
 
-  // 3. Cloud mein save karo
+  // Step 3: Cloud mein sirf flag save karo (chhota data — 5MB limit nahi aayegi)
   try{
-    let ex = {};
-    try{ ex = await binGet(); }catch(e2){}
-    await binPut({...ex, pmkisan_pdf: records});
-    setSS("✅ Cloud update ho gaya");
-    showPdfAlert("✅ PDF upload ho gaya! Customer kisi bhi device se download kar sakta hai।","#D1FAE5","#065F46");
+    await binPut({ pmkisan_pdf: records });
+    setSS("✅ Cloud update — Done");
+    showPdfAlert("✅ PDF upload ho gaya! Customer Registration Number se status check karke download kar sakta hai।","#D1FAE5","#065F46");
   }catch(e){
-    // Cloud fail hua — sirf local mein hai
-    setSS("⚠️ Local save — cloud fail");
-    showPdfAlert("✅ PDF save ho gaya (local). Customer same device se download kar sakta hai।","#D1FAE5","#065F46");
+    setSS("⚠️ Local save — cloud fail: " + e.message);
+    showPdfAlert("⚠️ Cloud save fail hua। File GitHub se dobara try karein।","#FEE2E2","#991B1B");
+    console.error("uploadPdf cloud error:", e);
   }
 
   renderTable(); updateStats();
-  setTimeout(()=>closePdfModal(), 2000);
+  setTimeout(()=>closePdfModal(), 2500);
 }
 
 function showPdfAlert(msg,bg,col){
