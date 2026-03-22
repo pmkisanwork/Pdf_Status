@@ -647,28 +647,58 @@ async function checkStatus(){
 }
 
 async function downloadPdf(id){
-  // Step 1: Is device ke localStorage mein check karo
+  const rec = records.find(r=>r.id===id) || {};
+
+  // Step 1: Is device ke localStorage mein check karo (fastest)
   const stored = localStorage.getItem("pdf_" + id);
   if(stored){
     try{
       const obj = JSON.parse(stored);
-      const a = document.createElement("a");
-      a.href = obj.data;
-      a.download = obj.name || "PMKisan-Status.pdf";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+      triggerDownload(obj.data, obj.name || "PMKisan-Status.pdf");
       return;
     }catch(e){ console.warn("localStorage read error:", e); }
   }
 
-  // Step 2: PDF is device pe nahi — WhatsApp pe request bhejo
-  const rec = records.find(r=>r.id===id) || {};
+  // Step 2: Cloud (JSONBin) se fetch karo — yahi main fix hai!
+  if(rec.pdfBinId){
+    try{
+      // Download button pe loading dikhao
+      const btn = document.querySelector('.pdf-download-btn');
+      if(btn){ btn.textContent = "⏳ PDF fetch ho raha hai..."; btn.disabled = true; }
+
+      const r = await fetch(`https://api.jsonbin.io/v3/b/${rec.pdfBinId}/latest`,{
+        method:"GET",
+        headers:{"X-Master-Key":BIN_KEY,"X-Bin-Meta":"false"}
+      });
+      if(r.ok){
+        const d = await r.json();
+        if(d && d.pdf_data){
+          // Cache in localStorage for next time
+          try{ localStorage.setItem("pdf_" + id, JSON.stringify({ data: d.pdf_data, name: d.pdf_name||"PMKisan-Status.pdf" })); }catch(e){}
+          triggerDownload(d.pdf_data, d.pdf_name || "PMKisan-Status.pdf");
+          return;
+        }
+      }
+    }catch(e){
+      console.warn("Cloud PDF fetch failed:", e);
+    }
+  }
+
+  // Step 3: Cloud mein bhi nahi mila — WhatsApp fallback
   const msg = "Namaste ji! 🙏\nMera PM Kisan Status PDF ready ho gaya hai.\nKripya PDF WhatsApp par bhejein.\n\nNaam: " + (rec.name||"") + "\nReg No: " + (rec.regNo||"") + "\nMobile: " + (rec.mobile||"");
   const waUrl = "https://wa.me/917668048141?text=" + encodeURIComponent(msg);
-  if(confirm("📄 PDF download ke liye:\n\nYeh PDF admin ke device pe save hai.\nAdmin ko WhatsApp par request bhejein?\n\n📞 7668048141")){
+  if(confirm("📄 PDF abhi cloud mein available nahi hai.\nAdmin ko WhatsApp par request bhejein?\n\n📞 7668048141")){
     window.open(waUrl, "_blank");
   }
+}
+
+function triggerDownload(dataUrl, filename){
+  const a = document.createElement("a");
+  a.href = dataUrl;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 }
 
 // ── ADMIN ──
@@ -820,33 +850,85 @@ async function uploadPdf(){
   if(!pdfBase64){ showPdfAlert("⚠️ Pehle file select karein।","#FEF3C7","#92400E"); return; }
   const pdfName = document.getElementById("selectedFileName")._name || "PMKisan-Status.pdf";
 
-  showPdfAlert("⏳ Save ho raha hai...","#E0E7FF","#3730A3");
+  showPdfAlert("⏳ PDF cloud mein save ho raha hai... thoda wait karein।","#E0E7FF","#3730A3");
 
-  // Step 1: PDF ko localStorage mein save karo (is device ke liye fast download)
+  // Step 1: PDF ko localStorage mein bhi save karo (admin device ke liye fast download)
   try{
     localStorage.setItem("pdf_" + id, JSON.stringify({ data: pdfBase64, name: pdfName }));
   }catch(e){ console.warn("localStorage full:", e); }
 
-  // Step 2: Record update — sirf flag cloud mein (PDF data nahi — size limit avoid)
-  records = records.map(r => r.id===id
-    ? {...r, pdfAvailable:true, pdfName:pdfName, pdfData:null, status:"Done"}
-    : r
-  );
+  // Step 2: PDF ko cloud (JSONBin) mein save karo — taaki koi bhi device se download ho sake
+  let cloudOk = false;
+  try{
+    const pdfBinId = await savePdfToCloud(id, pdfBase64, pdfName);
+    if(pdfBinId){
+      cloudOk = true;
+      // Record mein pdfBinId store karo
+      records = records.map(r => r.id===id
+        ? {...r, pdfAvailable:true, pdfName:pdfName, pdfData:null, pdfBinId:pdfBinId, status:"Done"}
+        : r
+      );
+    }
+  }catch(e){
+    console.warn("PDF cloud save failed:", e);
+  }
+
+  if(!cloudOk){
+    // Fallback: sirf flag save karo
+    records = records.map(r => r.id===id
+      ? {...r, pdfAvailable:true, pdfName:pdfName, pdfData:null, status:"Done"}
+      : r
+    );
+  }
+
   saveLocal();
 
-  // Step 3: Cloud mein sirf flag save karo (chhota data — 5MB limit nahi aayegi)
+  // Step 3: Main records cloud mein save karo
   try{
     await binPut({ pmkisan_pdf: records });
     setSS("✅ Cloud update — Done");
-    showPdfAlert("✅ PDF upload ho gaya! Customer Registration Number se status check karke download kar sakta hai।","#D1FAE5","#065F46");
+    if(cloudOk){
+      showPdfAlert("✅ PDF successfully cloud mein upload ho gaya! Customer kisi bhi device se Registration Number se status check karke download kar sakta hai।","#D1FAE5","#065F46");
+    } else {
+      showPdfAlert("⚠️ PDF cloud mein save nahi hua (file bahut badi ho sakti hai — 2MB se chhoti PDF try karein)। Customer ko WhatsApp se PDF bhejein।","#FEE2E2","#991B1B");
+    }
   }catch(e){
-    setSS("⚠️ Local save — cloud fail: " + e.message);
-    showPdfAlert("⚠️ Cloud save fail hua। File GitHub se dobara try karein।","#FEE2E2","#991B1B");
+    setSS("⚠️ Local only – " + e.message);
+    showPdfAlert("⚠️ Cloud sync fail. Internet check karein aur dobara try karein।","#FEE2E2","#991B1B");
     console.error("uploadPdf cloud error:", e);
   }
 
   renderTable(); updateStats();
-  setTimeout(()=>closePdfModal(), 2500);
+  setTimeout(()=>closePdfModal(), 3000);
+}
+
+// PDF ko alag JSONBin mein save karo (records se alag — size limit avoid)
+async function savePdfToCloud(id, pdfData, pdfName){
+  // Naya bin create karo ya existing update karo
+  const existingBinId = (records.find(r=>r.id===id)||{}).pdfBinId;
+
+  const payload = { pdf_id: id, pdf_name: pdfName, pdf_data: pdfData, uploaded_at: new Date().toISOString() };
+
+  if(existingBinId){
+    // Existing bin update karo
+    const r = await fetch(`https://api.jsonbin.io/v3/b/${existingBinId}`,{
+      method:"PUT",
+      headers:{"Content-Type":"application/json","X-Master-Key":BIN_KEY,"X-Bin-Versioning":"false"},
+      body: JSON.stringify(payload)
+    });
+    if(!r.ok) throw new Error("PDF bin PUT " + r.status);
+    return existingBinId;
+  } else {
+    // Naya bin create karo
+    const r = await fetch(`https://api.jsonbin.io/v3/b`,{
+      method:"POST",
+      headers:{"Content-Type":"application/json","X-Master-Key":BIN_KEY,"X-Bin-Name":"pdf_"+id,"X-Bin-Private":"false"},
+      body: JSON.stringify(payload)
+    });
+    if(!r.ok) throw new Error("PDF bin POST " + r.status);
+    const d = await r.json();
+    return d.metadata.id;
+  }
 }
 
 function showPdfAlert(msg,bg,col){
